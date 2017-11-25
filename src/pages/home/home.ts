@@ -11,6 +11,8 @@ import {
 })
 export class HomePage {
 
+  contactsList = [1,2,3,4,5,6];
+
   constructor(
     public navCtrl: NavController,
     public actionSheetCtrl: ActionSheetController,
@@ -73,7 +75,6 @@ export class HomePage {
   }
 
   meow() {
-    console.log('rawr');
+    console.log('meow');
   }
-
 }
