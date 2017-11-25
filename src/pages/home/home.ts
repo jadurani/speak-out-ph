@@ -28,7 +28,7 @@ export class HomePage {
 
   showConfirmModal(text: string) {
     let confirm = this.alertCtrl.create({
-      message: 'send sms message?',
+      message: `send sms message "${text}" to your emergency contacts?`,
       buttons: [
         {
           text: 'YES',
@@ -48,34 +48,33 @@ export class HomePage {
   }
 
   presentActionSheet() {
+    let textMessages = [
+      'Please come get me',
+      'Call me, I need an interruption',
+      'I need to talk'
+    ];
+
+    let buttonObjArray = [];
+    textMessages.forEach(textMessage => {
+      buttonObjArray.push({
+        text: textMessage,
+        handler: () => {
+          this.showConfirmModal(textMessage);
+        }
+      });
+    });
+
+    buttonObjArray.push({
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {}
+    });
+
     let actionSheet = this.actionSheetCtrl.create({
       title: 'Select message to send',
-      buttons: [
-        {
-          text: 'Please come get me',
-          handler: () => {
-            console.log('Destructive clicked');
-            this.showConfirmModal('Please come get me');
-          }
-        }, {
-          text: `Currently being bothered by someone, call me, I need an interruption`,
-          handler: () => {
-            console.log('Archive clicked');
-          }
-        }, {
-          text: `I need to talk`,
-          handler: () => {
-            console.log('Archive clicked');
-          }
-        }, {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
+      buttons: buttonObjArray
     });
+
     actionSheet.present();
   }
 
