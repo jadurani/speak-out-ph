@@ -8,20 +8,23 @@
 </ion-header>
 
 <ion-content padding>
-  <button ion-button color="danger" full (click)="presentActionSheet()">
+  <button ion-button color="danger" large full (click)="presentActionSheet()">
     ASK HELP NOW
   </button>
+
   <ion-card>
     <ion-card-header>
-      Emergency Contacts
+      <b>Emergency Contacts</b>
     </ion-card-header>
+
     <ion-card-content *ngFor="let contactDetails of contactsList">
       <ion-item (click)="meow()">
         <ion-avatar item-start>
-          <img src="https://1.bp.blogspot.com/-Tg_1__E2p08/V4Ug1iPjr_I/AAAAAAAACC0/MuoP9ZSpcsU3ZeoJ7Xx65OUTwVEYfReMwCK4B/s1600/best%2Bavatar%2Bimage.jpg">
+          <!-- <img src="https://1.bp.blogspot.com/-Tg_1__E2p08/V4Ug1iPjr_I/AAAAAAAACC0/MuoP9ZSpcsU3ZeoJ7Xx65OUTwVEYfReMwCK4B/s1600/best%2Bavatar%2Bimage.jpg"> -->
+          <img src="{{contactDetails.url}}">
         </ion-avatar>
-        <h2>Jadurani Davalos</h2>
-        <p>+639178625033</p>
+        <h2>{{contactDetails.displayName}}</h2>
+        <p>{{contactDetails.phoneNumber}}</p>
       </ion-item>
     </ion-card-content>
   </ion-card>

@@ -11,7 +11,12 @@ import {
 })
 export class HomePage {
 
-  contactsList = [1,2,3,4,5,6];
+  // contactsList = [1,2,3,4,5,6];
+  contactsList = [{
+    url:'https://1.bp.blogspot.com/-Tg_1__E2p08/V4Ug1iPjr_I/AAAAAAAACC0/MuoP9ZSpcsU3ZeoJ7Xx65OUTwVEYfReMwCK4B/s1600/best%2Bavatar%2Bimage.jpg',
+    displayName: 'Jadurani Davalos',
+    phoneNumber: '09088679753'
+  }];
 
   constructor(
     public navCtrl: NavController,
@@ -44,7 +49,7 @@ export class HomePage {
 
   presentActionSheet() {
     let actionSheet = this.actionSheetCtrl.create({
-      title: 'Select message',
+      title: 'Select message to send',
       buttons: [
         {
           text: 'Please come get me',
