@@ -72,4 +72,8 @@ export class HomePage {
     actionSheet.present();
   }
 
+  meow() {
+    console.log('rawr');
+  }
+
 }
