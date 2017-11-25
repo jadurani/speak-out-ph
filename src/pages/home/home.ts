@@ -6,10 +6,12 @@ import {
 } from 'ionic-angular';
 
 import { SMS } from '@ionic-native/sms';
+import { Contacts } from '@ionic-native/contacts';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  providers: [Contacts]
 })
 export class HomePage {
 
@@ -24,6 +26,7 @@ export class HomePage {
     public navCtrl: NavController,
     public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController,
+    private contactsVar: Contacts,
     private smsVar: SMS
   ) {
 
@@ -102,6 +105,10 @@ export class HomePage {
   }
 
   meow() {
-    console.log('meow');
+    this.contactsVar.pickContact().then((selectedContact) => {
+      alert(JSON.stringify(selectedContact));
+    }).catch((error) => {
+      alert(`error: ${error}`);
+    });
   }
 }
