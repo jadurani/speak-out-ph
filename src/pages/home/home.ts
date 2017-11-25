@@ -5,6 +5,8 @@ import {
   AlertController
 } from 'ionic-angular';
 
+import { SMS } from '@ionic-native/sms';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -21,26 +23,47 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     public actionSheetCtrl: ActionSheetController,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    private smsVar: SMS
   ) {
 
   }
 
+  sendSMSToContacts(text: string) {
+    let message = text + ' (sent via SpeakOutPH)';
+    let options = {
+      replaceLineBrakes: false,
+      android: {
+        intent: ''
+      }
+    };
+
+    this.contactsList.forEach(contactPerson => {
+      this.smsVar.send(
+        contactPerson.phoneNumber,
+        message,
+        options
+      ).then(() => {
+        alert('success');
+      }, () => {
+        alert('failed');
+      });
+    });
+  }
+
   showConfirmModal(text: string) {
     let confirm = this.alertCtrl.create({
-      message: `send sms message "${text}" to your emergency contacts?`,
+      message: `Send SMS message "${text}" to your emergency contacts?`,
       buttons: [
         {
           text: 'YES',
           handler: () => {
-            console.log('Agree clicked');
+            this.sendSMSToContacts(text);
           }
         },
         {
           text: 'no',
-          handler: () => {
-            console.log('Disagree clicked');
-          }
+          handler: () => {}
         }
       ]
     });
