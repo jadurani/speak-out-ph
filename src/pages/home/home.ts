@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import {
   NavController,
-  ActionSheetController
+  ActionSheetController,
+  AlertController
 } from 'ionic-angular';
 
 @Component({
@@ -12,9 +13,31 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
-    public actionSheetCtrl: ActionSheetController
+    public actionSheetCtrl: ActionSheetController,
+    public alertCtrl: AlertController
   ) {
 
+  }
+
+  showConfirmModal(text: string) {
+    let confirm = this.alertCtrl.create({
+      message: 'send sms message?',
+      buttons: [
+        {
+          text: 'YES',
+          handler: () => {
+            console.log('Agree clicked');
+          }
+        },
+        {
+          text: 'no',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   presentActionSheet() {
@@ -22,12 +45,18 @@ export class HomePage {
       title: 'Select message',
       buttons: [
         {
-          text: 'Blah 1',
+          text: 'Please come get me',
           handler: () => {
             console.log('Destructive clicked');
+            this.showConfirmModal('Please come get me');
           }
         }, {
-          text: 'Blah 2',
+          text: `Currently being bothered by someone, call me, I need an interruption`,
+          handler: () => {
+            console.log('Archive clicked');
+          }
+        }, {
+          text: `I need to talk`,
           handler: () => {
             console.log('Archive clicked');
           }
