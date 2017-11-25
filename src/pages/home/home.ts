@@ -8,28 +8,35 @@ import {
 import { SMS } from '@ionic-native/sms';
 import { Contacts } from '@ionic-native/contacts';
 
+import { ContactsListProvider } from '../../providers/contacts-list/contacts-list';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [Contacts]
+  providers: [Contacts, ContactsListProvider]
 })
 export class HomePage {
 
-  // contactsList = [1,2,3,4,5,6];
-  contactsList = [{
-    url:'https://1.bp.blogspot.com/-Tg_1__E2p08/V4Ug1iPjr_I/AAAAAAAACC0/MuoP9ZSpcsU3ZeoJ7Xx65OUTwVEYfReMwCK4B/s1600/best%2Bavatar%2Bimage.jpg',
-    displayName: 'Jadurani Davalos',
-    phoneNumber: '09088679753'
-  }];
+  contactsList = [];
+  dummyList = [];
 
   constructor(
     public navCtrl: NavController,
     public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController,
+    public contactsService: ContactsListProvider,
     private contactsVar: Contacts,
     private smsVar: SMS
   ) {
 
+    this.dummyList = this.contactsService
+      .getDummyEmergencyContactsList(this.contactsList.length);
+    this.contactsService.getEmergencyContacts()
+      .then((contactsListString) => {
+        this.contactsList = JSON.parse(contactsListString);
+      }).catch((err) => {
+        alert(err);
+      });
   }
 
   sendSMSToContacts(text: string) {
@@ -41,17 +48,20 @@ export class HomePage {
       }
     };
 
-    this.contactsList.forEach(contactPerson => {
-      this.smsVar.send(
-        contactPerson.phoneNumber,
-        message,
-        options
-      ).then(() => {
-        alert('success');
-      }, () => {
-        alert('failed');
+    if (this.contactsList && this.contactsList.length) {
+      this.contactsList.forEach(contactPerson => {
+        this.smsVar.send(
+          contactPerson.phoneNumber,
+          message,
+          options
+        ).then(() => {
+          alert('success');
+        }).catch(err => {
+          alert('failed');
+        });
       });
-    });
+    }
+
   }
 
   showConfirmModal(text: string) {
@@ -101,10 +111,12 @@ export class HomePage {
       buttons: buttonObjArray
     });
 
-    actionSheet.present();
+    if (this.contactsList && this.contactsList.length) {
+      actionSheet.present();
+    }
   }
 
-  meow() {
+  selectNewContact() {
     this.contactsVar.pickContact().then((selectedContact) => {
       alert(JSON.stringify(selectedContact));
     }).catch((error) => {
