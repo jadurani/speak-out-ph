@@ -43,10 +43,10 @@ export class ContactsListProvider {
 
     return this.storage.remove(this.DB_KEY).then(() => {
       this.storage.set(this.DB_KEY, contactsListString).then(() => {
-        alert(`stored!: ${contactsListString}`);
-        Promise.resolve({'status': 'OK'});
+        // alert(`stored!: ${contactsListString}`);
+        Promise.resolve(contactsListArray);
       }).catch(err => {
-        alert(`Error in updating list: ${err}`);
+        // alert(`Error in updating list: ${err}`);
         Promise.reject({ 'status': 'FAIL' });
       });
     });
@@ -90,16 +90,13 @@ export class ContactsListProvider {
       'rawId': selectedContact.id,
       'displayName': selectedContact.displayName,
       'phoneNumber': selectedContact.phoneNumbers[0].value,
-      'photoUrl': ''
+      'photoUrl': 'https://mediaassets.wkbw.com/photo/2017/10/17/CAT%20PIC_1508223570861_68991041_ver1.0_640_480.jpeg'
     };
 
-    if (selectedContact.photos) {
-      contactToStore.photoUrl = (this.sanitizer.bypassSecurityTrustUrl(selectedContact.photos[0].value)).toString();
-      alert(contactToStore.photoUrl);
-    }
-
-    alert(JSON.stringify(selectedContact));
-    alert(JSON.stringify(contactToStore));
+    // if (selectedContact.photos) {
+    //   contactToStore.photoUrl = this.sanitizer.bypassSecurityTrustUrl(selectedContact.photos[0].value) as string;
+    //   alert(contactToStore.photoUrl);
+    // }
 
     this.storage.get(this.DB_KEY).then((contactsListString) => {
       let contactsListArray = JSON.parse(contactsListString);

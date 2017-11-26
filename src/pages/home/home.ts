@@ -8,6 +8,8 @@ import {
 import { SMS } from '@ionic-native/sms';
 import { ContactsListProvider } from '../../providers/contacts-list/contacts-list';
 
+import {NgZone} from '@angular/core';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
@@ -23,7 +25,8 @@ export class HomePage {
     public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController,
     public contactsService: ContactsListProvider,
-    private smsVar: SMS
+    private smsVar: SMS,
+    private zone: NgZone
   ) {
     this.loadFromFactory();
   }
@@ -120,8 +123,9 @@ export class HomePage {
 
   selectNewContact(contactIndex) {
     this.contactsService.selectNewEmergencyContact(contactIndex)
-      .then(() => {
-        this.loadFromFactory();
+      .then((contactsListArray) => {
+        this.zone.run(this.loadFromFactory);
+        // this.contactsList = contactsListArray;
       })
       .catch((err) => {
         this._showAlert('Invalid Contact', 'Make sure your contact has a valid phone number')
