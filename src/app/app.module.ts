@@ -13,6 +13,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { SMS } from '@ionic-native/sms';
+import { Contacts } from '@ionic-native/contacts';
 import { ContactsListProvider } from '../providers/contacts-list/contacts-list';
 
 @NgModule({
@@ -40,6 +41,7 @@ import { ContactsListProvider } from '../providers/contacts-list/contacts-list';
     StatusBar,
     SplashScreen,
     SMS,
+    Contacts,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ContactsListProvider
   ]

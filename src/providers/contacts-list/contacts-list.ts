@@ -98,13 +98,23 @@ export class ContactsListProvider {
       'rawId': selectedContact.rawId,
       'displayName': selectedContact.displayName,
       'phoneNumber': selectedContact.phoneNumbers[0].value,
-      'photoUrl': 'samp',
+      'photoUrl': ''
     };
+
+    if (!selectedContact.photos && selectedContact.is(Array)) {
+      contactToStore.photoUrl = selectedContact.photos[0].value;
+      alert(contactToStore.photoUrl);
+    }
+
+    alert(contactToStore);
 
     this.storage.get(this.DB_KEY).then((contactsListString) => {
       let contactsListArray = JSON.parse(contactsListString);
       if (!contactsListArray) {
         contactsListArray = [];
+      } else if (contactIndex < 0) {
+        // add new instead of replace
+        contactToStore.id = contactsListArray.length;
       }
       contactsListArray.push(contactToStore);
 
@@ -124,13 +134,13 @@ export class ContactsListProvider {
    * Check what happens if user just clicks on back,
    * Would that throw an error too?
    */
-  selectNewEmergencyContact() {
-    this.nativeContactsService.pickContact().then(
+  selectNewEmergencyContact(contactIndex) {
+    return this.nativeContactsService.pickContact().then(
       (selectedContact) => {
-        this.saveAsEmergencyContact(selectedContact);
-        // alert(JSON.stringify(selectedContact));
+        this.saveAsEmergencyContact(selectedContact), contactIndex;
+        return Promise.resolve();
       }).catch((error) => {
-        alert(`error: ${error}`);
+        return Promise.reject(`error: ${error}`);
       });
   }
 }

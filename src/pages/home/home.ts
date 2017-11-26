@@ -6,14 +6,12 @@ import {
 } from 'ionic-angular';
 
 import { SMS } from '@ionic-native/sms';
-import { Contacts } from '@ionic-native/contacts';
-
 import { ContactsListProvider } from '../../providers/contacts-list/contacts-list';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [Contacts, ContactsListProvider]
+  providers: [ContactsListProvider]
 })
 export class HomePage {
 
@@ -25,15 +23,17 @@ export class HomePage {
     public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController,
     public contactsService: ContactsListProvider,
-    private contactsVar: Contacts,
     private smsVar: SMS
   ) {
+    this.loadFromFactory();
+  }
 
-    this.dummyList = this.contactsService
-      .getDummyEmergencyContactsList(this.contactsList.length);
+  loadFromFactory() {
     this.contactsService.getEmergencyContacts()
       .then((contactsListString) => {
-        this.contactsList = JSON.parse(contactsListString);
+        this.contactsList = JSON.parse(contactsListString) || [];
+        this.dummyList = this.contactsService
+          .getDummyEmergencyContactsList(this.contactsList.length);
       }).catch((err) => {
         alert(err);
       });
@@ -116,11 +116,9 @@ export class HomePage {
     }
   }
 
-  selectNewContact() {
-    this.contactsVar.pickContact().then((selectedContact) => {
-      alert(JSON.stringify(selectedContact));
-    }).catch((error) => {
-      alert(`error: ${error}`);
-    });
+  selectNewContact(contactIndex) {
+    this.contactsService.selectNewEmergencyContact(contactIndex)
+      .then(() => {})
+      .catch((err) => alert(err));
   }
 }
