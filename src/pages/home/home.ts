@@ -35,7 +35,9 @@ export class HomePage {
         this.dummyList = this.contactsService
           .getDummyEmergencyContactsList(this.contactsList.length);
       }).catch((err) => {
-        alert(err);
+        this._showAlert(
+          'Relaunch App',
+          'There were problems launching the app. Kindly reload, thanks.');
       });
   }
 
@@ -55,9 +57,9 @@ export class HomePage {
           message,
           options
         ).then(() => {
-          alert('success');
+          this._showAlert('Success', 'Message sent!');
         }).catch(err => {
-          alert('failed');
+          this._showAlert('Failed', 'Send failed.');
         });
       });
     }
@@ -118,7 +120,20 @@ export class HomePage {
 
   selectNewContact(contactIndex) {
     this.contactsService.selectNewEmergencyContact(contactIndex)
-      .then(() => {})
-      .catch((err) => alert(err));
+      .then(() => {
+        this.loadFromFactory();
+      })
+      .catch((err) => {
+        this._showAlert('Invalid Contact', 'Make sure your contact has a valid phone number')
+      });
+  }
+
+  _showAlert(alertTitle, alertMessage) {
+    let alert = this.alertCtrl.create({
+      title: alertTitle,
+      subTitle: alertMessage,
+      buttons: ['OK']
+    });
+    alert.present();
   }
 }

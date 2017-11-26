@@ -23,7 +23,6 @@
       <ion-item *ngFor="let contactDetails of contactsList; let contactIndex = index"
         (click)="selectNewContact(contactIndex)">
         <ion-avatar item-start>
-          <!-- <img src="https://1.bp.blogspot.com/-Tg_1__E2p08/V4Ug1iPjr_I/AAAAAAAACC0/MuoP9ZSpcsU3ZeoJ7Xx65OUTwVEYfReMwCK4B/s1600/best%2Bavatar%2Bimage.jpg"> -->
           <img src="{{contactDetails.photoUrl}}">
         </ion-avatar>
         <h2>{{contactDetails.displayName}}</h2>
@@ -31,9 +30,9 @@
       </ion-item>
       <ion-item *ngFor="let dummyDetails of dummyList; let dummyIndex = index"
         (click)="selectNewContact(-1)">
-        <ion-avatar item-start>
-          <img src="https://1.bp.blogspot.com/-Tg_1__E2p08/V4Ug1iPjr_I/AAAAAAAACC0/MuoP9ZSpcsU3ZeoJ7Xx65OUTwVEYfReMwCK4B/s1600/best%2Bavatar%2Bimage.jpg">
-        </ion-avatar>
+        <button ion-button icon-only clear item-start medium>
+          <ion-icon name="ios-contact-outline" ></ion-icon>
+        </button>
         <h2 style="font-color:gray;"><i>{{dummyDetails.displayName}}</i></h2>
       </ion-item>
     </ion-card-content>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Contacts } from '@ionic-native/contacts';
+import { DomSanitizer } from '@angular/platform-browser';
 
 /*
 * Class that communicates with the local database (Storage).
@@ -29,9 +30,9 @@ export class ContactsListProvider {
 
   constructor(
     private storage: Storage,
-    private nativeContactsService: Contacts
+    private nativeContactsService: Contacts,
+    private sanitizer: DomSanitizer
   ) {
-    console.log('Hello ContactsListProvider Provider');
   }
 
   /**
@@ -53,9 +54,9 @@ export class ContactsListProvider {
 
   getDummyEmergencyContactsList(nonDummyListLength) {
     let dummyInfo = {
-      // 'id': contactIndex,
+      'id': -1,
       'rawId': 0,
-      'displayName': 'Select an emergency contact',
+      'displayName': 'Select a contact',
       'phoneNumber': '',
       'photoUrl': '',
     };
@@ -75,15 +76,6 @@ export class ContactsListProvider {
    */
   getEmergencyContacts() {
     return this.storage.get(this.DB_KEY);
-    // return new Promise((resolve, reject) => {
-    //   this.storage.get(this.DB_KEY).then((contactsListString) => {
-    //     alert(contactsListString);
-    //     resolve(contactsListString);
-    //   }).catch(err => {
-    //     alert(`Error in fetching list: ${err}`);
-    //     resolve();
-    //   });
-    // });
   }
 
   /**
@@ -95,18 +87,19 @@ export class ContactsListProvider {
     // TO DO: Check for valid phone numbers
     let contactToStore = {
       'id': contactIndex,
-      'rawId': selectedContact.rawId,
+      'rawId': selectedContact.id,
       'displayName': selectedContact.displayName,
       'phoneNumber': selectedContact.phoneNumbers[0].value,
       'photoUrl': ''
     };
 
-    if (!selectedContact.photos && selectedContact.is(Array)) {
-      contactToStore.photoUrl = selectedContact.photos[0].value;
+    if (selectedContact.photos) {
+      contactToStore.photoUrl = (this.sanitizer.bypassSecurityTrustUrl(selectedContact.photos[0].value)).toString();
       alert(contactToStore.photoUrl);
     }
 
-    alert(contactToStore);
+    alert(JSON.stringify(selectedContact));
+    alert(JSON.stringify(contactToStore));
 
     this.storage.get(this.DB_KEY).then((contactsListString) => {
       let contactsListArray = JSON.parse(contactsListString);
@@ -137,7 +130,7 @@ export class ContactsListProvider {
   selectNewEmergencyContact(contactIndex) {
     return this.nativeContactsService.pickContact().then(
       (selectedContact) => {
-        this.saveAsEmergencyContact(selectedContact), contactIndex;
+        this.saveAsEmergencyContact(selectedContact, contactIndex);
         return Promise.resolve();
       }).catch((error) => {
         return Promise.reject(`error: ${error}`);
