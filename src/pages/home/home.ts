@@ -18,7 +18,6 @@ import {NgZone} from '@angular/core';
 export class HomePage {
 
   contactsList = [];
-  dummyList = [];
 
   constructor(
     public navCtrl: NavController,
@@ -26,7 +25,6 @@ export class HomePage {
     public alertCtrl: AlertController,
     public contactsService: ContactsListProvider,
     private smsVar: SMS,
-    private zone: NgZone
   ) {
     this.loadFromFactory();
   }
@@ -35,8 +33,9 @@ export class HomePage {
     this.contactsService.getEmergencyContacts()
       .then((contactsListString) => {
         this.contactsList = JSON.parse(contactsListString) || [];
-        this.dummyList = this.contactsService
-          .getDummyEmergencyContactsList(this.contactsList.length);
+        const dummyList = this.contactsService
+        .getDummyEmergencyContactsList(this.contactsList.length);
+        this.contactsList = [...this.contactsList, ...dummyList];
       }).catch((err) => {
         this._showAlert(
           'Relaunch App',
@@ -121,11 +120,19 @@ export class HomePage {
     }
   }
 
+  insertToList(contactItem, contactIndex) {
+    // this.contactsList.push(contactItem);
+    this.contactsList = [
+      ...this.contactsList.slice(0, contactIndex),
+      contactItem,
+      ...this.contactsList.slice(contactIndex + 1, this.contactsList.length),
+    ]
+  }
+
   selectNewContact(contactIndex) {
     this.contactsService.selectNewEmergencyContact(contactIndex)
-      .then((contactsListArray) => {
-        this.zone.run(this.loadFromFactory);
-        // this.contactsList = contactsListArray;
+      .then((contactItem) => {
+        this.insertToList(contactItem, contactIndex);
       })
       .catch((err) => {
         this._showAlert('Invalid Contact', 'Make sure your contact has a valid phone number')

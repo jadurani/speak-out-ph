@@ -98,7 +98,7 @@ export class ContactsListProvider {
     //   alert(contactToStore.photoUrl);
     // }
 
-    this.storage.get(this.DB_KEY).then((contactsListString) => {
+    return this.storage.get(this.DB_KEY).then((contactsListString) => {
       let contactsListArray = JSON.parse(contactsListString);
       if (!contactsListArray) {
         contactsListArray = [];
@@ -108,7 +108,9 @@ export class ContactsListProvider {
       }
       contactsListArray.push(contactToStore);
 
-      return this.resetContactsRecord(contactsListArray);
+      // return this.resetContactsRecord(contactsListArray);
+      this.resetContactsRecord(contactsListArray);
+      return contactToStore;
     }).catch(err => {
       alert(`Error in fetching list: ${err}`);
     });
@@ -127,8 +129,8 @@ export class ContactsListProvider {
   selectNewEmergencyContact(contactIndex) {
     return this.nativeContactsService.pickContact().then(
       (selectedContact) => {
-        this.saveAsEmergencyContact(selectedContact, contactIndex);
-        return Promise.resolve();
+        let contactToStore = this.saveAsEmergencyContact(selectedContact, contactIndex);
+        return contactToStore;
       }).catch((error) => {
         return Promise.reject(`error: ${error}`);
       });

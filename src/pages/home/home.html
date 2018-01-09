@@ -20,21 +20,26 @@
     </ion-card-header>
 
     <ion-card-content>
-      <ion-item *ngFor="let contactDetails of contactsList; let contactIndex = index"
-        (click)="selectNewContact(contactIndex)">
-        <ion-avatar item-start>
-          <img src="{{contactDetails.photoUrl}}">
-        </ion-avatar>
-        <h2>{{contactDetails.displayName}}</h2>
-        <p>{{contactDetails.phoneNumber}}</p>
-      </ion-item>
-      <ion-item *ngFor="let dummyDetails of dummyList; let dummyIndex = index"
-        (click)="selectNewContact(-1)">
-        <button ion-button icon-only clear item-start large>
-          <ion-icon name="ios-contact-outline" ></ion-icon>
-        </button>
-        <h2 style="font-color:gray;"><i>{{dummyDetails.displayName}}</i></h2>
-      </ion-item>
+      <div *ngFor="let contactDetails of contactsList; let contactIndex = index" (click)="selectNewContact(contactIndex)">
+
+        <ion-item *ngIf="contactDetails.phoneNumber">
+          <ion-avatar item-start>
+            <img src="{{contactDetails.photoUrl}}">
+          </ion-avatar>
+          <h2>{{contactDetails.displayName}}</h2>
+          <p>{{contactDetails.phoneNumber}}</p>
+        </ion-item>
+
+        <ion-item *ngIf="!contactDetails.phoneNumber">
+          <button ion-button icon-only clear item-start large>
+            <ion-icon name="ios-contact-outline"></ion-icon>
+          </button>
+          <h2 style="font-color:gray;">
+            <i>{{contactDetails.displayName}}</i>
+          </h2>
+        </ion-item>
+
+      </div>
     </ion-card-content>
   </ion-card>
 </ion-content>
